@@ -1,23 +1,17 @@
-# connect-mongo
+# connect-mongoose-only
 
-MongoDB session store for [Connect](https://github.com/senchalabs/connect) and [Express](http://expressjs.com/)
+Mongoose session store for [Connect](https://github.com/senchalabs/connect) and [Express](http://expressjs.com/)
 
-[![npm version](https://img.shields.io/npm/v/connect-mongo.svg)](https://www.npmjs.com/package/connect-mongo)
-[![downloads](https://img.shields.io/npm/dm/connect-mongo.svg)](https://www.npmjs.com/package/connect-mongo)
-[![Build Status](https://travis-ci.org/jdesboeufs/connect-mongo.svg?branch=master)](https://travis-ci.org/jdesboeufs/connect-mongo)
-[![Coverage Status](https://coveralls.io/repos/jdesboeufs/connect-mongo/badge.svg?branch=master&service=github)](https://coveralls.io/github/jdesboeufs/connect-mongo?branch=master)
+ 
 
 ## Compatibility
 
 * Support Express up to `5.0`
 * Support all Connect versions
 * Support [Mongoose](http://mongoosejs.com/index.html) `>= 5.0`
-* Support [native MongoDB driver](http://mongodb.github.io/node-mongodb-native/) `>= 3.0`
 * Support Node.js 8, 10 and 12
 * Support [MongoDB](https://www.mongodb.com/) `3.2 - 4.0`
 
-For extended compatibility, see previous versions [v2.0.3](https://github.com/jdesboeufs/connect-mongo/tree/v2.0.3).
-But please note that we are not maintaining v2.x.x anymore.
 
 ## Usage
 
@@ -27,7 +21,7 @@ Express `4.x`, `5.0` and Connect `3.x`:
 
 ```js
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongoose-only')(session);
 
 app.use(session({
     secret: 'foo',
@@ -37,9 +31,9 @@ app.use(session({
 
 ### Connection to MongoDB
 
-In many circumstances, `connect-mongo` will not be the only part of your application which need a connection to a MongoDB database. It could be interesting to re-use an existing connection.
+In many circumstances, `connect-mongoose-only` will not be the only part of your application which need a connection to a MongoDB database. It could be interesting to re-use an existing connection.
 
-Alternatively, you can configure `connect-mongo` to establish a new connection.
+Alternatively, you can configure `connect-mongoose-only` to establish a new connection.
 
 #### Re-use an existing Mongoose connection
 
@@ -60,47 +54,7 @@ app.use(session({
     store: new MongoStore({ mongooseConnection: connection })
 }));
 ```
-
-#### Re-use an existing native MongoDB driver client (or a promise)
-
-In this case, you just have to give your `MongoClient` instance to `connect-mongo`.
-
-```js
-/*
-** There are many ways to create MongoClient.
-** You should refer to the driver documentation.
-*/
-
-// Database name present in the connection string will be used
-app.use(session({
-    store: new MongoStore({ client: clientInstance })
-}));
-
-// Explicitly specifying database name
-app.use(session({
-    store: new MongoStore({
-        client: clientInstance,
-        dbName: 'test-app'
-    })
-}));
-```
-
-Or just give a promise...
-
-```js
-// Database name present in the connection string will be used
-app.use(session({
-    store: new MongoStore({ clientPromise: clientInstancePromise })
-}));
-
-// Explicitly specifying database name
-app.use(session({
-    store: new MongoStore({
-        clientPromise: clientInstancePromise,
-        dbName: 'test-app'
-    })
-}));
-```
+ 
 
 #### Create a new connection from a MongoDB connection string
 
@@ -135,7 +89,7 @@ A `MongoStore` instance will emit the following events:
 
 ## Session expiration
 
-When the session cookie has an expiration date, `connect-mongo` will use it.
+When the session cookie has an expiration date, `connect-mongoose-only` will use it.
 
 Otherwise, it will create a new one, using `ttl` option.
 
@@ -152,11 +106,11 @@ __Note:__ Each time an user interacts with the server, its session expiration da
 
 ## Remove expired sessions
 
-By default, `connect-mongo` uses MongoDB's TTL collection feature (2.2+) to have mongod automatically remove expired sessions. But you can change this behavior.
+By default, `connect-mongoose-only` uses MongoDB's TTL collection feature (2.2+) to have mongod automatically remove expired sessions. But you can change this behavior.
 
 ### Set MongoDB to clean expired sessions (default mode)
 
-`connect-mongo` will create a TTL index for you at startup. You MUST have MongoDB 2.2+ and administration permissions.
+`connect-mongoose-only` will create a TTL index for you at startup. You MUST have MongoDB 2.2+ and administration permissions.
 
 ```js
 app.use(session({
@@ -167,13 +121,13 @@ app.use(session({
 }));
 ```
 
-__Note:__ If you use `connect-mongo` in a very concurrent environment, you should avoid this mode and prefer setting the index yourself, once!
+__Note:__ If you use `connect-mongoose-only` in a very concurrent environment, you should avoid this mode and prefer setting the index yourself, once!
 
 ### Set the compatibility mode
 
-You have an older MongoDB version (compatible with connect-mongo) or you can't or don't want to create a TTL index.
+You have an older MongoDB version (compatible with connect-mongoose-only) or you can't or don't want to create a TTL index.
 
-`connect-mongo` will take care of removing expired sessions, using defined interval.
+`connect-mongoose-only` will take care of removing expired sessions, using defined interval.
 
 ```js
 app.use(session({
@@ -254,7 +208,7 @@ One of the following options should be provided. If more than one option are pro
 |`autoRemoveInterval`|`10`|Interval (in minutes) used when `autoRemove` option is set to `interval`.|
 |`touchAfter`||Interval (in seconds) between session updates.|
 |`fallbackMemory`||Fallback to `MemoryStore` if `true`. Useful if you want to use `MemoryStore` in some case, like in development environment.|
-|`stringify`|`true`|If `true`, connect-mongo will serialize sessions using `JSON.stringify` before setting them, and deserialize them with `JSON.parse` when getting them. This is useful if you are using types that MongoDB doesn't support.|
+|`stringify`|`true`|If `true`, connect-mongoose-only will serialize sessions using `JSON.stringify` before setting them, and deserialize them with `JSON.parse` when getting them. This is useful if you are using types that MongoDB doesn't support.|
 |`serialize`||Custom hook for serializing sessions to MongoDB. This is helpful if you need to modify the session before writing it out.|
 |`unserialize`||Custom hook for unserializing sessions from MongoDB. This can be used in scenarios where you need to support different types of serializations (e.g., objects and JSON strings) or need to modify the session before using it in your app.|
 |`writeOperationOptions`||Options object to pass to every MongoDB write operation call that supports it (e.g. `update`, `remove`). Useful for adjusting the write concern. Only exception: If `autoRemove` is set to `'interval'`, the write concern from the `writeOperationOptions` object will get overwritten.|
@@ -280,11 +234,11 @@ yarn install
 yarn test
 ```
 
-The tests use a database called `connect-mongo-test`.
+The tests use a database called `connect-mongoose-only-test`.
 
 ## Showcase
 
-Open source projects and production apps using `connect-mongo`. Feel free to add yours in a pull request.
+Open source projects and production apps using `connect-mongoose-only`. Feel free to add yours in a pull request.
 
 * [Builder Book](https://github.com/builderbook/builderbook): Open source web app to write and host documentation or sell books. Built with React, Material-UI, Next, Express, Mongoose, MongoDB.
 

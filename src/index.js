@@ -1,6 +1,6 @@
 'use strict'
 
-const MongoClient = require('mongodb')
+const Mongoose = require('mongoose').Mongoose
 const { mergeMongoOptions } = require('./helper')
 
 function withCallback(promise, cb) {
@@ -90,18 +90,15 @@ module.exports = function(connect) {
 
       this.changeState('init')
 
-      const newConnectionCallback = (err, client) => {
-        if (err) {
-          this.connectionFailed(err)
-        } else {
-          this.handleNewConnectionAsync(client, options.dbName)
-        }
-      }
-
       if (options.url) {
-        // New native connection using url + mongoOptions
         const _mongoOptions = mergeMongoOptions(options.mongoOptions)
-        MongoClient.connect(options.url, _mongoOptions, newConnectionCallback)
+        const mongoose = new Mongoose()
+        // mongoose.Promise = global.Promise
+        mongoose.connect(options.url, _mongoOptions)
+        const mongooseConnection = mongoose.connection
+        mongooseConnection.once('open', () => {
+          this.handleNewConnectionAsync(mongooseConnection)
+        })
       } else if (options.mongooseConnection) {
         // Re-use existing or upcoming mongoose connection
         if (options.mongooseConnection.readyState === 1) {

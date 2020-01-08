@@ -1,15 +1,15 @@
 {
-  "name": "connect-mongo",
-  "version": "3.2.0",
-  "description": "MongoDB session store for Express and Connect",
+  "name": "connect-mongoose-only",
+  "version": "3.2.1",
+  "description": "Mongoose session store for Express and Connect",
   "keywords": [
     "connect",
-    "mongo",
-    "mongodb",
+    "Mongoose",
     "session",
     "express"
   ],
   "contributors": [
+    "LiXuanXian<lxx8585@qq.com>",
     "Casey Banner <kcbanner@gmail.com>",
     "Jerome Desboeufs <jerome.desboeufs@gmail.com>",
     "MC Or <mingchuno@gmail.com>"
@@ -17,20 +17,18 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jdesboeufs/connect-mongo.git"
+    "url": "https://github.com/lixuanxian/connect-mongoose-only.git"
   },
   "bugs": {
-    "url": "https://github.com/jdesboeufs/connect-mongo/issues"
+    "url": "https://github.com/lixuanxian/connect-mongoose-only/issues"
   },
   "dependencies": {
-    "mongodb": "^3.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
     "@types/express": "4.17.1",
     "@types/express-session": "1.15.15",
-    "@types/mongodb": "3.3.7",
     "@types/mongoose": "5.5.26",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
